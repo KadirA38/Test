@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-function EventForm({ onAdd }) {
+function EventForm({ onCreated }) {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -47,8 +47,8 @@ function EventForm({ onAdd }) {
         const newEvent = await response.json();
         setMessage('✓ Etkinlik başarıyla oluşturuldu! Admin onayını beklemektedir.');
 
-        if (onAdd) {
-          onAdd(newEvent);
+        if (onCreated) {
+          onCreated(newEvent);
         }
 
         // Formu sıfırla
