@@ -10,7 +10,7 @@ function App() {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
-  
+
   // Authentication State
   const [token, setToken] = useState(localStorage.getItem('token') || '');
   const [currentUser, setCurrentUser] = useState(() => {
@@ -109,13 +109,13 @@ function App() {
       if (response.ok) {
         const data = await response.json();
         setEvents(data);
-        
+
         // İstatistikleri Hesapla
         const approved = data.filter(e => e.approvalStatus === 'APPROVED' || !e.approvalStatus).length;
         const pending = data.filter(e => e.approvalStatus === 'PENDING').length;
         const rejected = data.filter(e => e.approvalStatus === 'REJECTED').length;
         const capacity = data.reduce((sum, e) => sum + (e.capacity || 0), 0);
-        
+
         setStats({
           totalEvents: data.length,
           approvedEvents: approved,
@@ -395,7 +395,7 @@ function App() {
       setUserRoleMessage("❌ Bağlantı hatası!");
     }
   };
-  
+
   const handleDeleteUser = async (userId) => {
     if (userId === currentUser.id) {
       setUserRoleMessage("❌ Hata: Kendi admin hesabınızı silemezsiniz!");
@@ -500,16 +500,16 @@ function App() {
       // 1. Katılımcıyı email ile getir
       const emailEncoded = encodeURIComponent(targetEmail);
       const pRes = await fetch(`http://localhost:8080/api/participants/email/${emailEncoded}`);
-      
+
       if (pRes.status === 404) {
         setSearchMessage('Bu e-posta adresine ait bilet kaydı bulunamadı.');
         setSearchingRegistrations(false);
         return;
       }
-      
+
       if (pRes.ok) {
         const participant = await pRes.json();
-        
+
         // 2. Katılımcının etkinliklerini getir
         const regRes = await fetch(`http://localhost:8080/api/event-participants/participant/${participant.id}`);
         if (regRes.ok) {
@@ -619,7 +619,7 @@ function App() {
           setRegForm({ firstName: '', lastName: '', email: '', phoneNumber: '' });
         }
         triggerRefresh();
-        
+
         // Seçili etkinliğin katılımcı sayısını lokalde arttır
         setSelectedEvent(prev => ({
           ...prev,
@@ -681,7 +681,7 @@ function App() {
         const names = newReview.reviewerName.trim().split(' ');
         const firstName = names[0];
         const lastName = names.slice(1).join(' ') || 'Değerlendiren';
-        
+
         const createRes = await fetch('http://localhost:8080/api/participants', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -692,7 +692,7 @@ function App() {
             phoneNumber: '05555555555'
           })
         });
-        
+
         if (createRes.ok) {
           participant = await createRes.json();
         } else {
@@ -728,7 +728,7 @@ function App() {
         try {
           const parsed = JSON.parse(errText);
           parsedErr = parsed.message || parsedErr;
-        } catch {}
+        } catch { }
         setReviewMessage(`❌ Hata: ${parsedErr}`);
       }
     } catch (error) {
@@ -753,7 +753,7 @@ function App() {
     setToken(userToken);
     setCurrentUser(userObj);
     setAlert(`👋 Başarıyla giriş yapıldı: Hoş geldiniz, ${userObj.firstName || userObj.username}!`);
-    
+
     // Rolüne göre otomatik portala yönlendir
     if (userObj.userRole === 'ADMIN') {
       setActivePortal('admin');
@@ -762,7 +762,7 @@ function App() {
     } else {
       setActivePortal('customer');
     }
-    
+
     handleBackToEvents();
     setTimeout(() => setAlert(''), 4000);
   };
@@ -818,7 +818,7 @@ function App() {
     if (filterFree && !ev.isFree) return false;
     if (filterMaxPrice && ev.price > Number(filterMaxPrice)) return false;
     if (searchKeyword && !(ev.title || '').toLowerCase().includes(searchKeyword.toLowerCase()) &&
-        !(ev.description || '').toLowerCase().includes(searchKeyword.toLowerCase())) return false;
+      !(ev.description || '').toLowerCase().includes(searchKeyword.toLowerCase())) return false;
     return true;
   });
 
@@ -834,7 +834,7 @@ function App() {
               <p className="subtitle">Premium Online Etkinlik & Bilet Yönetim Sistemi</p>
             </div>
           </div>
-          
+
           {/* Authenticated user banner */}
           <div className="header-auth-badge">
             {currentUser ? (
@@ -849,8 +849,8 @@ function App() {
                 </button>
               </div>
             ) : (
-              <button 
-                className="header-btn-login" 
+              <button
+                className="header-btn-login"
                 onClick={() => { setActivePortal('customer'); setSelectedEvent(null); }}
               >
                 🔑 Giriş Yap / Kayıt Ol
@@ -862,7 +862,7 @@ function App() {
         {/* Portal Switcher Tabs */}
         <div className="portal-tabs">
           {(!currentUser || currentUser.userRole === 'USER') && (
-            <button 
+            <button
               className={`portal-tab-btn ${activePortal === 'customer' ? 'active' : ''}`}
               onClick={() => { setActivePortal('customer'); handleBackToEvents(); }}
             >
@@ -870,7 +870,7 @@ function App() {
             </button>
           )}
           {(!currentUser || currentUser.userRole === 'ORGANIZER') && (
-            <button 
+            <button
               className={`portal-tab-btn ${activePortal === 'organizer' ? 'active' : ''}`}
               onClick={() => { setActivePortal('organizer'); handleBackToEvents(); }}
             >
@@ -878,7 +878,7 @@ function App() {
             </button>
           )}
           {(!currentUser || currentUser.userRole === 'ADMIN') && (
-            <button 
+            <button
               className={`portal-tab-btn ${activePortal === 'admin' ? 'active' : ''}`}
               onClick={() => { setActivePortal('admin'); handleBackToEvents(); }}
             >
@@ -898,7 +898,7 @@ function App() {
           <div className="portal-container animate-fade">
             {!selectedEvent ? (
               <div className="customer-dashboard">
-                
+
                 {/* Giriş yapmamış müşterilere sunulan hoşgeldin paneli */}
                 {!currentUser && (
                   <div className="customer-landing-auth-card card animate-slide">
@@ -919,8 +919,8 @@ function App() {
                     <p className="section-subtitle">Daha önce kaydolduğunuz etkinlikleri sorgulayın ve biletinizi görüntüleyin.</p>
                   </div>
                   <form onSubmit={handleQueryRegistrations} className="query-form">
-                    <input 
-                      type="email" 
+                    <input
+                      type="email"
                       placeholder="Kayıt olduğunuz e-posta adresini girin..."
                       value={searchEmail}
                       onChange={(e) => setSearchEmail(e.target.value)}
@@ -941,7 +941,7 @@ function App() {
                           const associatedEvent = events.find(e => e.id === reg.eventId);
                           const eventStartDate = associatedEvent ? new Date(associatedEvent.startDate) : null;
                           const isPast = eventStartDate ? (eventStartDate <= new Date()) : false;
-                          
+
                           return (
                             <div key={reg.id} className="ticket-card animate-slide" style={{ borderLeft: reg.status === 'CANCELLED' ? '4px solid #ff3b30' : '4px solid #34c759' }}>
                               <div className="ticket-stub">
@@ -977,7 +977,7 @@ function App() {
                                     ⚠️ Etkinlik başladığı için iptal edilemez.
                                   </p>
                                 ) : (
-                                  <button 
+                                  <button
                                     onClick={() => handleCancelRegistration(reg.id, associatedEvent ? associatedEvent.title : `Etkinlik #${reg.eventId}`, associatedEvent?.startDate)}
                                     style={{
                                       marginTop: '12px',
@@ -1085,7 +1085,7 @@ function App() {
                           <div className="card-body">
                             <h3>{event.title}</h3>
                             <p className="desc-text">{event.description || 'Açıklama belirtilmemiş.'}</p>
-                            
+
                             <div className="card-meta">
                               <div className="meta-item">
                                 <span className="meta-icon">📍</span>
@@ -1115,7 +1115,7 @@ function App() {
               /* Detay Sayfası */
               <div className="event-detail-view card animate-slide">
                 <button onClick={handleBackToEvents} className="btn-back">← Etkinliklere Geri Dön</button>
-                
+
                 <div className="detail-header">
                   <span className="detail-category">{getCategoryName(selectedEvent.categoryId)}</span>
                   <h2>{selectedEvent.title}</h2>
@@ -1126,7 +1126,7 @@ function App() {
                   <div className="detail-info-block">
                     <h3>Etkinlik Detayları</h3>
                     <p className="detail-desc">{selectedEvent.description || 'Bu etkinlik için henüz bir detaylı açıklama girilmedi.'}</p>
-                    
+
                     <div className="detail-meta-list">
                       <div className="detail-meta-item">
                         <span className="meta-icon">📍</span>
@@ -1183,9 +1183,9 @@ function App() {
                                 <span className="review-stars">{'★'.repeat(r.rating)}{'☆'.repeat(5 - r.rating)}</span>
                               </div>
                               <p className="review-comment" style={{ margin: '8px 0' }}>{r.comment}</p>
-                              
+
                               <div style={{ display: 'flex', gap: '15px', alignItems: 'center', marginTop: '10px' }}>
-                                <button 
+                                <button
                                   onClick={() => handleMarkReviewHelpful(r.id)}
                                   style={{
                                     border: 'none', background: '#e1f5fe', color: '#0288d1',
@@ -1195,9 +1195,9 @@ function App() {
                                 >
                                   👍 Faydalı ({r.helpfulCount || 0})
                                 </button>
-                                
+
                                 {currentUser && (currentUser.userRole === 'ADMIN' || `${currentUser.firstName || ''} ${currentUser.lastName || ''}`.trim() === r.reviewerName || currentUser.username === r.reviewerName) && (
-                                  <button 
+                                  <button
                                     onClick={() => handleDeleteReview(r.id)}
                                     style={{
                                       border: 'none', background: '#ffebee', color: '#c62828',
@@ -1218,14 +1218,14 @@ function App() {
                         <h4>Etkinliği Değerlendir</h4>
                         {reviewMessage && <p className="review-info">{reviewMessage}</p>}
                         <div className="form-group-row">
-                          <input 
-                            type="text" 
-                            placeholder="Adınız Soyadınız" 
+                          <input
+                            type="text"
+                            placeholder="Adınız Soyadınız"
                             value={newReview.reviewerName}
                             onChange={(e) => setNewReview({ ...newReview, reviewerName: e.target.value })}
                             required
                           />
-                          <select 
+                          <select
                             value={newReview.rating}
                             onChange={(e) => setNewReview({ ...newReview, rating: Number(e.target.value) })}
                           >
@@ -1236,8 +1236,8 @@ function App() {
                             <option value="1">⭐ (1/5)</option>
                           </select>
                         </div>
-                        <textarea 
-                          placeholder="Etkinlik hakkındaki düşünceleriniz..." 
+                        <textarea
+                          placeholder="Etkinlik hakkındaki düşünceleriniz..."
                           value={newReview.comment}
                           onChange={(e) => setNewReview({ ...newReview, comment: e.target.value })}
                           required
@@ -1252,14 +1252,14 @@ function App() {
                     <div className="register-sticky-card">
                       <h3>🎟️ Etkinliğe Kaydol</h3>
                       <p className="register-intro">Aşağıdaki formu doldurarak etkinlik katılımınızı onaylayın.</p>
-                      
+
                       {regMessage && <div className="register-status-msg">{regMessage}</div>}
 
                       <form onSubmit={handleRegister} className="register-form">
                         <div className="form-field">
                           <label>Adınız *</label>
-                          <input 
-                            type="text" 
+                          <input
+                            type="text"
                             placeholder="Örn. Ahmet"
                             value={regForm.firstName}
                             onChange={(e) => setRegForm({ ...regForm, firstName: e.target.value })}
@@ -1268,8 +1268,8 @@ function App() {
                         </div>
                         <div className="form-field">
                           <label>Soyadınız *</label>
-                          <input 
-                            type="text" 
+                          <input
+                            type="text"
                             placeholder="Örn. Yılmaz"
                             value={regForm.lastName}
                             onChange={(e) => setRegForm({ ...regForm, lastName: e.target.value })}
@@ -1278,8 +1278,8 @@ function App() {
                         </div>
                         <div className="form-field">
                           <label>E-Posta Adresiniz *</label>
-                          <input 
-                            type="email" 
+                          <input
+                            type="email"
                             placeholder="ahmet@example.com"
                             value={regForm.email}
                             onChange={(e) => setRegForm({ ...regForm, email: e.target.value })}
@@ -1288,8 +1288,8 @@ function App() {
                         </div>
                         <div className="form-field">
                           <label>Telefon Numarası</label>
-                          <input 
-                            type="text" 
+                          <input
+                            type="text"
                             placeholder="0555 555 5555"
                             value={regForm.phoneNumber}
                             onChange={(e) => setRegForm({ ...regForm, phoneNumber: e.target.value })}
@@ -1301,15 +1301,15 @@ function App() {
                           <div className="promo-coupon-section" style={{ borderTop: '1px dashed #ddd', paddingTop: '15px', marginTop: '15px', marginBottom: '15px' }}>
                             <label style={{ fontSize: '13px', fontWeight: 'bold', display: 'block', marginBottom: '5px' }}>🎟️ Promosyon / Kupon Kodu</label>
                             <div style={{ display: 'flex', gap: '8px' }}>
-                              <input 
-                                type="text" 
-                                placeholder="Örn: BAHAR20" 
+                              <input
+                                type="text"
+                                placeholder="Örn: BAHAR20"
                                 value={couponCodeInput}
                                 onChange={(e) => setCouponCodeInput(e.target.value)}
                                 style={{ flex: 1, padding: '6px', fontSize: '13px', textTransform: 'uppercase' }}
                               />
-                              <button 
-                                type="button" 
+                              <button
+                                type="button"
                                 onClick={handleApplyCoupon}
                                 style={{ padding: '6px 12px', fontSize: '13px', backgroundColor: '#5856d6', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
                               >
@@ -1327,7 +1327,7 @@ function App() {
                                   <strong>Kupon uygulandı!</strong> %{appliedPromo.discountPercentage} İndirim.
                                 </p>
                                 <p style={{ fontSize: '14px', margin: '5px 0 0 0', fontWeight: 'bold', color: '#155724' }}>
-                                  Ödenecek Tutar: <span style={{ textDecoration: 'line-through', color: '#888', fontSize: '13px' }}>{selectedEvent.price} TL</span> { (selectedEvent.price * (1 - appliedPromo.discountPercentage / 100)).toFixed(2) } TL
+                                  Ödenecek Tutar: <span style={{ textDecoration: 'line-through', color: '#888', fontSize: '13px' }}>{selectedEvent.price} TL</span> {(selectedEvent.price * (1 - appliedPromo.discountPercentage / 100)).toFixed(2)} TL
                                 </p>
                               </div>
                             )}
@@ -1365,7 +1365,7 @@ function App() {
               <div className="organizer-portal-view" style={{ width: '100%' }}>
                 {/* Sub tabs for Organizer */}
                 <div className="portal-sub-tabs" style={{ display: 'flex', gap: '15px', marginBottom: '20px', borderBottom: '2px solid #e5e5ea', paddingBottom: '10px' }}>
-                  <button 
+                  <button
                     onClick={() => setOrganizerTab('events')}
                     className={`sub-tab-btn ${organizerTab === 'events' ? 'active' : ''}`}
                     style={{
@@ -1376,7 +1376,7 @@ function App() {
                   >
                     📅 Etkinlik Ekle & Yönet
                   </button>
-                  <button 
+                  <button
                     onClick={() => setOrganizerTab('promotions')}
                     className={`sub-tab-btn ${organizerTab === 'promotions' ? 'active' : ''}`}
                     style={{
@@ -1396,7 +1396,7 @@ function App() {
                       const totalCapacity = myEvents.reduce((sum, e) => sum + (e.capacity || 0), 0);
                       const totalParticipants = myEvents.reduce((sum, e) => sum + (e.participantCount || 0), 0);
                       const totalRevenue = myEvents.reduce((sum, e) => sum + ((e.participantCount || 0) * (e.price || 0)), 0);
-                      
+
                       return (
                         <>
                           {/* Dashboard İstatistikleri */}
@@ -1417,7 +1417,7 @@ function App() {
 
                           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '10px' }}>
                             <h2 style={{ margin: 0 }}>📋 Etkinliklerim</h2>
-                            <button 
+                            <button
                               onClick={() => setShowEventModal(true)}
                               style={{ padding: '10px 20px', backgroundColor: '#007aff', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '8px', boxShadow: '0 4px 10px rgba(0,122,255,0.3)' }}
                             >
@@ -1436,7 +1436,7 @@ function App() {
                               {myEvents.map((e) => {
                                 const fillPercentage = e.capacity > 0 ? Math.min(100, ((e.participantCount || 0) / e.capacity) * 100) : 0;
                                 const revenue = (e.participantCount || 0) * (e.price || 0);
-                                
+
                                 return (
                                   <div key={e.id} className="org-event-card" style={{ backgroundColor: 'white', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 4px 15px rgba(0,0,0,0.05)', display: 'flex', flexDirection: 'column' }}>
                                     <div style={{ padding: '15px', borderBottom: '1px solid #f0f0f0' }}>
@@ -1459,7 +1459,7 @@ function App() {
                                         <span>📍</span> {e.location} {e.city ? `(${e.city})` : ''}
                                       </div>
                                     </div>
-                                    
+
                                     <div style={{ padding: '15px', backgroundColor: '#fafbfc', flex: 1 }}>
                                       <div style={{ marginBottom: '12px' }}>
                                         <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', marginBottom: '4px', fontWeight: 'bold', color: '#555' }}>
@@ -1470,7 +1470,7 @@ function App() {
                                           <div style={{ height: '100%', width: `${fillPercentage}%`, backgroundColor: fillPercentage >= 100 ? '#ff3b30' : '#34c759', transition: 'width 0.3s ease' }}></div>
                                         </div>
                                       </div>
-                                      
+
                                       <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', marginTop: '10px', paddingTop: '10px', borderTop: '1px dashed #ddd' }}>
                                         <span style={{ color: '#666' }}>Bilet: <strong>{e.isFree ? 'Ücretsiz' : `${e.price} ₺`}</strong></span>
                                         <span style={{ color: '#666' }}>Gelir: <strong style={{ color: '#007aff' }}>{revenue.toLocaleString('tr-TR')} ₺</strong></span>
@@ -1481,15 +1481,15 @@ function App() {
                                         </div>
                                       )}
                                     </div>
-                                    
+
                                     <div style={{ padding: '10px', borderTop: '1px solid #eee', display: 'flex', gap: '10px' }}>
-                                      <button 
+                                      <button
                                         onClick={() => setShowParticipantsModalFor(e.id)}
                                         style={{ flex: 1, padding: '8px', backgroundColor: '#f0f0f5', color: '#333', border: '1px solid #ddd', borderRadius: '6px', cursor: 'pointer', fontSize: '13px', fontWeight: 'bold' }}
                                       >
                                         👥 Katılımcılar
                                       </button>
-                                      <button 
+                                      <button
                                         style={{ flex: 1, padding: '8px', backgroundColor: '#f0f0f5', color: '#333', border: '1px solid #ddd', borderRadius: '6px', cursor: 'pointer', fontSize: '13px', fontWeight: 'bold' }}
                                       >
                                         ✏️ Düzenle
@@ -1505,19 +1505,19 @@ function App() {
                           {showEventModal && (
                             <div className="modal-overlay" style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
                               <div className="modal-content animate-slide" style={{ backgroundColor: 'white', borderRadius: '12px', width: '90%', maxWidth: '800px', maxHeight: '90vh', overflowY: 'auto', padding: '20px', position: 'relative' }}>
-                                <button 
+                                <button
                                   onClick={() => setShowEventModal(false)}
                                   style={{ position: 'absolute', top: '15px', right: '15px', background: 'none', border: 'none', fontSize: '20px', cursor: 'pointer', color: '#888' }}
                                 >
                                   ✖
                                 </button>
                                 <h2 style={{ marginTop: 0, marginBottom: '20px', borderBottom: '1px solid #eee', paddingBottom: '10px' }}>🎉 Yeni Etkinlik Oluştur</h2>
-                                <EventForm 
-                                  organizerId={currentUser.id} 
+                                <EventForm
+                                  organizerId={currentUser.id}
                                   onCreated={(newEvent) => {
                                     handleEventCreated(newEvent);
                                     setShowEventModal(false);
-                                  }} 
+                                  }}
                                 />
                               </div>
                             </div>
@@ -1527,15 +1527,15 @@ function App() {
                           {showParticipantsModalFor && (
                             <div className="modal-overlay" style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
                               <div className="modal-content animate-slide" style={{ backgroundColor: 'white', borderRadius: '12px', width: '90%', maxWidth: '600px', maxHeight: '80vh', overflowY: 'auto', padding: '20px', position: 'relative' }}>
-                                <button 
+                                <button
                                   onClick={() => setShowParticipantsModalFor(null)}
                                   style={{ position: 'absolute', top: '15px', right: '15px', background: 'none', border: 'none', fontSize: '20px', cursor: 'pointer', color: '#888', zIndex: 10 }}
                                 >
                                   ✖
                                 </button>
-                                <ParticipantList 
-                                  eventId={showParticipantsModalFor} 
-                                  onUpdate={() => setRefreshTrigger(prev => prev + 1)} 
+                                <ParticipantList
+                                  eventId={showParticipantsModalFor}
+                                  onUpdate={() => setRefreshTrigger(prev => prev + 1)}
                                 />
                               </div>
                             </div>
@@ -1558,10 +1558,10 @@ function App() {
                       <form onSubmit={handleCreatePromo}>
                         <div style={{ marginBottom: '12px' }}>
                           <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '4px', fontSize: '13px' }}>Kupon Başlığı *</label>
-                          <input 
-                            type="text" 
-                            placeholder="Örn: Bahar Kampanyası" 
-                            value={promoForm.title} 
+                          <input
+                            type="text"
+                            placeholder="Örn: Bahar Kampanyası"
+                            value={promoForm.title}
                             onChange={(e) => setPromoForm({ ...promoForm, title: e.target.value })}
                             required
                             style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
@@ -1569,10 +1569,10 @@ function App() {
                         </div>
                         <div style={{ marginBottom: '12px' }}>
                           <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '4px', fontSize: '13px' }}>Açıklama</label>
-                          <input 
-                            type="text" 
-                            placeholder="Örn: Tüm müzik etkinliklerinde %20 indirim" 
-                            value={promoForm.description} 
+                          <input
+                            type="text"
+                            placeholder="Örn: Tüm müzik etkinliklerinde %20 indirim"
+                            value={promoForm.description}
                             onChange={(e) => setPromoForm({ ...promoForm, description: e.target.value })}
                             style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
                           />
@@ -1580,10 +1580,10 @@ function App() {
                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '12px' }}>
                           <div>
                             <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '4px', fontSize: '13px' }}>Kupon Kodu *</label>
-                            <input 
-                              type="text" 
-                              placeholder="Örn: BAHAR20" 
-                              value={promoForm.campaignCode} 
+                            <input
+                              type="text"
+                              placeholder="Örn: BAHAR20"
+                              value={promoForm.campaignCode}
                               onChange={(e) => setPromoForm({ ...promoForm, campaignCode: e.target.value.toUpperCase() })}
                               required
                               style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ccc', textTransform: 'uppercase' }}
@@ -1591,11 +1591,11 @@ function App() {
                           </div>
                           <div>
                             <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '4px', fontSize: '13px' }}>İndirim Yüzdesi (%) *</label>
-                            <input 
-                              type="number" 
-                              min="1" 
-                              max="100" 
-                              value={promoForm.discountPercentage} 
+                            <input
+                              type="number"
+                              min="1"
+                              max="100"
+                              value={promoForm.discountPercentage}
                               onChange={(e) => setPromoForm({ ...promoForm, discountPercentage: e.target.value })}
                               required
                               style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
@@ -1605,8 +1605,8 @@ function App() {
                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '15px' }}>
                           <div>
                             <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '4px', fontSize: '13px' }}>Geçerli Etkinlik</label>
-                            <select 
-                              value={promoForm.eventId} 
+                            <select
+                              value={promoForm.eventId}
                               onChange={(e) => setPromoForm({ ...promoForm, eventId: e.target.value })}
                               style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
                             >
@@ -1618,10 +1618,10 @@ function App() {
                           </div>
                           <div>
                             <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '4px', fontSize: '13px' }}>Kullanım Limiti</label>
-                            <input 
-                              type="number" 
-                              min="1" 
-                              value={promoForm.maxParticipants} 
+                            <input
+                              type="number"
+                              min="1"
+                              value={promoForm.maxParticipants}
                               onChange={(e) => setPromoForm({ ...promoForm, maxParticipants: e.target.value })}
                               style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
                             />
@@ -1748,7 +1748,7 @@ function App() {
 
                 {/* Admin Sub tabs */}
                 <div className="portal-sub-tabs" style={{ display: 'flex', gap: '15px', marginBottom: '20px', borderBottom: '2px solid #e5e5ea', paddingBottom: '10px', marginTop: '20px' }}>
-                  <button 
+                  <button
                     onClick={() => setAdminTab('approvals')}
                     className={`sub-tab-btn ${adminTab === 'approvals' ? 'active' : ''}`}
                     style={{
@@ -1759,7 +1759,7 @@ function App() {
                   >
                     📋 Bekleyen Onaylar
                   </button>
-                  <button 
+                  <button
                     onClick={() => setAdminTab('users')}
                     className={`sub-tab-btn ${adminTab === 'users' ? 'active' : ''}`}
                     style={{
@@ -1770,7 +1770,7 @@ function App() {
                   >
                     👤 Kullanıcı Rolleri & Yönetim
                   </button>
-                  <button 
+                  <button
                     onClick={() => setAdminTab('events')}
                     className={`sub-tab-btn ${adminTab === 'events' ? 'active' : ''}`}
                     style={{
@@ -1781,7 +1781,7 @@ function App() {
                   >
                     📅 Tüm Etkinlikler & Yönetim
                   </button>
-                  <button 
+                  <button
                     onClick={() => { setAdminTab('categories'); fetchCategories(); }}
                     className={`sub-tab-btn ${adminTab === 'categories' ? 'active' : ''}`}
                     style={{
@@ -1806,7 +1806,7 @@ function App() {
                   <div className="card animate-slide" style={{ padding: '20px' }}>
                     <h3>👤 Sistem Kullanıcıları & Rol Atamaları</h3>
                     <p style={{ color: '#888', fontSize: '13px', marginBottom: '15px' }}>Sistemdeki kayıtlı tüm kullanıcıları listeleyin ve yetki seviyelerini (Rollerini) anında güncelleyin.</p>
-                    
+
                     {userRoleMessage && (
                       <div style={{ padding: '10px', backgroundColor: userRoleMessage.startsWith('✓') ? '#e6f4ea' : '#fce8e6', color: userRoleMessage.startsWith('✓') ? '#137333' : '#c5221f', borderRadius: '4px', marginBottom: '15px', fontWeight: 'bold' }}>
                         {userRoleMessage}
@@ -1848,8 +1848,8 @@ function App() {
                                   </span>
                                 </td>
                                 <td style={{ padding: '12px' }}>
-                                  <select 
-                                    value={user.userRole} 
+                                  <select
+                                    value={user.userRole}
                                     onChange={(e) => handleChangeUserRole(user.id, e.target.value)}
                                     style={{ padding: '6px', borderRadius: '4px', border: '1px solid #ccc', fontSize: '13px' }}
                                   >
@@ -1859,10 +1859,10 @@ function App() {
                                   </select>
                                 </td>
                                 <td style={{ padding: '12px' }}>
-                                  <button 
+                                  <button
                                     onClick={() => handleDeleteUser(user.id)}
                                     style={{
-                                      backgroundColor: '#ff3b30', color: 'white', border: 'none', 
+                                      backgroundColor: '#ff3b30', color: 'white', border: 'none',
                                       padding: '6px 12px', borderRadius: '4px', cursor: 'pointer',
                                       fontSize: '12px', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '4px'
                                     }}
@@ -1886,7 +1886,7 @@ function App() {
                   <div className="card animate-slide" style={{ padding: '20px' }}>
                     <h3>📅 Tüm Etkinlikler & Yönetim</h3>
                     <p style={{ color: '#888', fontSize: '13px', marginBottom: '15px' }}>Sistemdeki tüm aktif, onaylı, onay bekleyen veya reddedilen etkinlikleri görüntüleyin ve yönetin.</p>
-                    
+
                     {userRoleMessage && (
                       <div style={{ padding: '10px', backgroundColor: userRoleMessage.startsWith('✓') ? '#e6f4ea' : '#fce8e6', color: userRoleMessage.startsWith('✓') ? '#137333' : '#c5221f', borderRadius: '4px', marginBottom: '15px', fontWeight: 'bold' }}>
                         {userRoleMessage}
@@ -1931,10 +1931,10 @@ function App() {
                                   </span>
                                 </td>
                                 <td style={{ padding: '12px' }}>
-                                  <button 
+                                  <button
                                     onClick={() => handleDeleteEvent(ev.id)}
                                     style={{
-                                      backgroundColor: '#ff3b30', color: 'white', border: 'none', 
+                                      backgroundColor: '#ff3b30', color: 'white', border: 'none',
                                       padding: '6px 12px', borderRadius: '4px', cursor: 'pointer',
                                       fontSize: '12px', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '4px'
                                     }}
@@ -1950,7 +1950,7 @@ function App() {
                     </div>
                   </div>
                 )}
-                
+
                 {adminTab === 'categories' && (
                   <div className="card animate-slide" style={{ padding: '20px' }}>
                     <h3>📁 Kategori Yönetimi</h3>

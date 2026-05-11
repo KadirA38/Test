@@ -74,7 +74,7 @@ const ReviewSystem = ({ eventId }) => {
         <div style={{ marginTop: '30px', padding: '20px', borderTop: '2px solid #eee' }}>
             <h3>⭐ Değerlendirmeler ve Yorumlar</h3>
             {alert && <div style={{ padding: '10px', backgroundColor: '#e6ffe6', color: 'green', marginBottom: '10px' }}>{alert}</div>}
-            
+
             <form onSubmit={handleSubmit} style={{ marginBottom: '20px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
                 <select value={rating} onChange={(e) => setRating(parseInt(e.target.value))} style={{ padding: '8px' }}>
                     <option value={5}>⭐⭐⭐⭐⭐ (5/5 Mükemmel)</option>
@@ -83,20 +83,20 @@ const ReviewSystem = ({ eventId }) => {
                     <option value={2}>⭐⭐ (2/5 Kötü)</option>
                     <option value={1}>⭐ (1/5 Çok Kötü)</option>
                 </select>
-                <input 
-                    type="text" 
-                    placeholder="Başlık (Örn: Harika bir deneyimdi!)" 
-                    value={title} 
-                    onChange={(e) => setTitle(e.target.value)} 
-                    style={{ padding: '8px' }} 
-                    required 
+                <input
+                    type="text"
+                    placeholder="Başlık (Örn: Harika bir deneyimdi!)"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    style={{ padding: '8px' }}
+                    required
                 />
-                <textarea 
-                    placeholder="Yorumunuz..." 
-                    value={comment} 
-                    onChange={(e) => setComment(e.target.value)} 
-                    style={{ padding: '8px', minHeight: '80px' }} 
-                    required 
+                <textarea
+                    placeholder="Yorumunuz..."
+                    value={comment}
+                    onChange={(e) => setComment(e.target.value)}
+                    style={{ padding: '8px', minHeight: '80px' }}
+                    required
                 />
                 <button type="submit" style={{ padding: '10px', backgroundColor: '#4caf50', color: 'white', border: 'none', cursor: 'pointer' }}>
                     Yorum Yap

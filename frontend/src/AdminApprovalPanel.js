@@ -38,7 +38,7 @@ const AdminApprovalPanel = ({ onApprovalChanged }) => {
       const response = await fetch(`http://localhost:8080/api/events/${eventId}/approve?adminId=1`, {
         method: 'POST',
       });
-      
+
       if (response.ok) {
         showToast('✓ Etkinlik başarıyla onaylandı ve yayına alındı!', 'success');
         // Listeden çıkar
@@ -67,7 +67,7 @@ const AdminApprovalPanel = ({ onApprovalChanged }) => {
         `http://localhost:8080/api/events/${eventId}/reject?rejectionReason=${encodeURIComponent(reason.trim())}`,
         { method: 'POST' }
       );
-      
+
       if (response.ok) {
         showToast('✗ Etkinlik reddedildi ve organizatöre bilgi verildi.', 'info');
         setPendingEvents(prev => prev.filter((e) => e.id !== eventId));
@@ -83,10 +83,10 @@ const AdminApprovalPanel = ({ onApprovalChanged }) => {
   };
 
   return (
-    <div style={{ 
-      padding: '24px', 
+    <div style={{
+      padding: '24px',
       backgroundColor: '#ffffff',
-      borderRadius: '16px', 
+      borderRadius: '16px',
       boxShadow: '0 8px 30px rgba(0,0,0,0.08)',
       marginBottom: '24px',
       position: 'relative',
@@ -122,11 +122,11 @@ const AdminApprovalPanel = ({ onApprovalChanged }) => {
         <h2 style={{ margin: 0, fontSize: '20px', color: '#1c1c1e', fontWeight: '800', display: 'flex', alignItems: 'center', gap: '8px' }}>
           <span>📋</span> Onay Bekleyen Etkinlik Talepleri
         </h2>
-        <span style={{ 
-          fontSize: '12px', 
-          backgroundColor: '#f2f2f7', 
-          padding: '4px 10px', 
-          borderRadius: '20px', 
+        <span style={{
+          fontSize: '12px',
+          backgroundColor: '#f2f2f7',
+          padding: '4px 10px',
+          borderRadius: '20px',
           color: '#8e8e93',
           fontWeight: 'bold'
         }}>
@@ -141,10 +141,10 @@ const AdminApprovalPanel = ({ onApprovalChanged }) => {
       )}
 
       {!loading && pendingEvents.length === 0 ? (
-        <div style={{ 
-          textAlign: 'center', 
-          padding: '40px 20px', 
-          backgroundColor: '#f8f9fa', 
+        <div style={{
+          textAlign: 'center',
+          padding: '40px 20px',
+          backgroundColor: '#f8f9fa',
           borderRadius: '12px',
           color: '#8e8e93',
           border: '1px dashed #e5e5ea'
@@ -173,13 +173,13 @@ const AdminApprovalPanel = ({ onApprovalChanged }) => {
             >
               <div style={{ flex: 1 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                  <span style={{ 
-                    fontSize: '11px', 
-                    backgroundColor: '#ff9500', 
-                    color: '#ffffff', 
-                    padding: '2px 8px', 
-                    borderRadius: '10px', 
-                    fontWeight: 'bold' 
+                  <span style={{
+                    fontSize: '11px',
+                    backgroundColor: '#ff9500',
+                    color: '#ffffff',
+                    padding: '2px 8px',
+                    borderRadius: '10px',
+                    fontWeight: 'bold'
                   }}>
                     PENDING
                   </span>
@@ -189,10 +189,10 @@ const AdminApprovalPanel = ({ onApprovalChanged }) => {
                 <p style={{ margin: '0 0 12px 0', color: '#3a3a3c', fontSize: '14px', lineHeight: '1.5' }}>
                   <strong>Açıklama:</strong> {event.description}
                 </p>
-                
-                <div style={{ 
-                  display: 'grid', 
-                  gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', 
+
+                <div style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
                   gap: '10px',
                   fontSize: '13px',
                   color: '#48484a',
@@ -209,9 +209,9 @@ const AdminApprovalPanel = ({ onApprovalChanged }) => {
                 </div>
               </div>
 
-              <div style={{ 
-                display: 'flex', 
-                flexDirection: 'column', 
+              <div style={{
+                display: 'flex',
+                flexDirection: 'column',
                 gap: '10px',
                 minWidth: '120px'
               }}>
@@ -266,7 +266,7 @@ const AdminApprovalPanel = ({ onApprovalChanged }) => {
           ))}
         </div>
       )}
-      
+
       {/* Dynamic Keyframes injected for Toast slideIn animation */}
       <style>{`
         @keyframes slideIn {
