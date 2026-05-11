@@ -9,7 +9,9 @@ IF OBJECT_ID('Events', 'U') IS NOT NULL
     DROP TABLE Events;
 
 IF OBJECT_ID('Participants', 'U') IS NOT NULL
-    DROP TABLE Participants;1. Etkinlik Kapasite ve Çakışma Kontrolü (Business Logic)
+    DROP TABLE Participants;
+
+1. Etkinlik Kapasite ve Çakışma Kontrolü (Business Logic)
 Hocalar sadece veritabanına kayıt atmaya bakmaz, kodun içinde bir "mantık" ararlar.
 
 Özellik: Bir kullanıcı aynı saatte olan iki farklı etkinliğe bilet alamasın. Veya etkinlik kapasitesi 50 kişiyse, 51. kişiye "Kontenjan Doldu" uyarısı versin.
