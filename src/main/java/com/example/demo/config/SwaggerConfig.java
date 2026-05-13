@@ -5,6 +5,7 @@ import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.servers.Server;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -12,11 +13,13 @@ import java.util.List;
 
 /**
  * Swagger / OpenAPI 3.0 yapılandırması
- * API belgelerini http://localhost:8080/swagger-ui.html adresinden görüntüleyebilirsiniz
  */
 @Configuration
 public class SwaggerConfig {
     
+    @Value("${app.swagger.server-url:https://your-api-domain.com}")
+    private String serverUrl;
+
     @Bean
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
@@ -34,11 +37,8 @@ public class SwaggerConfig {
                     .url("https://opensource.org/licenses/MIT")))
             .servers(List.of(
                 new Server()
-                    .url("http://localhost:8080")
-                    .description("Geliştirme Sunucusu"),
-                new Server()
-                    .url("https://api.eventmanagement.com")
-                    .description("Üretim Sunucusu")
+                    .url(serverUrl)
+                    .description("API Sunucusu")
             ));
     }
 }

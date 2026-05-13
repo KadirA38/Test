@@ -125,7 +125,7 @@ Write-Host ""
 # ==========================================
 Write-Host "TEST 13: Create New Category" -ForegroundColor Green
 $body = @{
-    name = "Music and Entertainment"
+    name        = "Music and Entertainment"
     description = "Concerts, music festivals and entertainment events"
 } | ConvertTo-Json
 $response = Invoke-RestMethod -Uri "$BaseUrl/api/categories" -Method Post -Headers $Headers -Body $body
@@ -137,9 +137,9 @@ Write-Host ""
 # ==========================================
 Write-Host "TEST 14: Create New Participant" -ForegroundColor Green
 $body = @{
-    firstName = "Kerem"
-    lastName = "Bulut"
-    email = "kerem.bulut@example.com"
+    firstName   = "Kerem"
+    lastName    = "Bulut"
+    email       = "kerem.bulut@example.com"
     phoneNumber = "05553333333"
 } | ConvertTo-Json
 $response = Invoke-RestMethod -Uri "$BaseUrl/api/participants" -Method Post -Headers $Headers -Body $body
@@ -151,13 +151,13 @@ Write-Host ""
 # ==========================================
 Write-Host "TEST 15: Create New Event" -ForegroundColor Green
 $body = @{
-    title = "Kubernetes Workshop"
+    title       = "Kubernetes Workshop"
     description = "Container orchestration with Kubernetes"
-    startDate = "2024-06-10T09:00:00"
-    endDate = "2024-06-10T17:00:00"
-    location = "Istanbul, Tech Campus"
-    capacity = 100
-    categoryId = 2
+    startDate   = "2024-06-10T09:00:00"
+    endDate     = "2024-06-10T17:00:00"
+    location    = "Istanbul, Tech Campus"
+    capacity    = 100
+    categoryId  = 2
 } | ConvertTo-Json
 $response = Invoke-RestMethod -Uri "$BaseUrl/api/events" -Method Post -Headers $Headers -Body $body
 Write-Host $response | ConvertTo-Json -Depth 10
@@ -168,9 +168,9 @@ Write-Host ""
 # ==========================================
 Write-Host "TEST 16: Update Participant (ID=1)" -ForegroundColor Green
 $body = @{
-    firstName = "Ahmet"
-    lastName = "Yilmaz"
-    email = "ahmet.yilmaz@example.com"
+    firstName   = "Ahmet"
+    lastName    = "Yilmaz"
+    email       = "ahmet.yilmaz@example.com"
     phoneNumber = "05551234568"
 } | ConvertTo-Json
 $response = Invoke-RestMethod -Uri "$BaseUrl/api/participants/1" -Method Put -Headers $Headers -Body $body
@@ -192,7 +192,8 @@ Write-Host "TEST 18: Update Participation Status to ATTENDED" -ForegroundColor G
 try {
     $response = Invoke-RestMethod -Uri "$BaseUrl/api/event-participants/1/status?status=ATTENDED" -Method Patch -Headers $Headers
     Write-Host "Status Updated Successfully" -ForegroundColor Green
-} catch {
+}
+catch {
     Write-Host "Status updated (HTTP 200)" -ForegroundColor Green
 }
 Write-Host ""
